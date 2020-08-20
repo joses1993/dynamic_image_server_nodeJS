@@ -14,6 +14,8 @@ app.use(express.static(dir));
 var globalText1 = '';
 var globalText2 = '';
 
+const port = 3333;
+
 
 // ***Use Zoom api to get # meetings in progress. ***
 
@@ -91,7 +93,7 @@ app.get('/updateText', function(req, res) {
 
 });
 
-app.listen('1337', function() {
+app.listen(port, function() {
 
 	console.log("Server started.");
 
