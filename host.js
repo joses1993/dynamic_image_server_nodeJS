@@ -93,7 +93,7 @@ app.get('/updateText', function(req, res) {
 
 });
 
-app.listen(port, function() {
+app.listen('1336', function() {
 
 	console.log("Server started.");
 
