@@ -8,13 +8,14 @@ const fs = require('fs');
 var schedule = require('node-schedule');
 const {createCanvas} = require('canvas');
 
+
 const dir = path.join(__dirname, 'public');
 app.use(express.static(dir));
 
 var globalText1 = '';
 var globalText2 = '';
 
-const port = 3333;
+const port = 80;
 
 
 // ***Use Zoom api to get # meetings in progress. ***
@@ -93,9 +94,11 @@ app.get('/updateText', function(req, res) {
 
 });
 
-app.listen('1336', function() {
+app.use('/.well-known/pki-validation/', express.static(__dirname + '/public'));
 
-	console.log("Server started.");
+app.listen(port, function() {
+
+	console.log("Server started on: ", port);
 
 	//scheduled job.
 	var j = schedule.scheduleJob('* */1 * * * *', function(fireDate){
