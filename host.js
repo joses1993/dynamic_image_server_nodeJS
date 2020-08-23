@@ -7,6 +7,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const fs = require('fs');
 var schedule = require('node-schedule');
 const {createCanvas} = require('canvas');
+const https = require('https');
 
 
 const dir = path.join(__dirname, 'public');
@@ -16,7 +17,11 @@ var globalText1 = '';
 var globalText2 = '';
 
 const port = 80;
-
+const options = {
+	key: fs.readFileSync('private.key'),
+	cert: fs.readFileSync('certificate.crt'),
+	ca: fs.readFileSync('ca_bundle.crt')
+};
 
 // ***Use Zoom api to get # meetings in progress. ***
 
@@ -98,14 +103,29 @@ app.use('/.well-known/pki-validation/', express.static(__dirname + '/public'));
 
 app.listen(port, function() {
 
-	console.log("Server started on: ", port);
+	console.log("HTTP Server started on: ", port);
 
 	//scheduled job.
-	var j = schedule.scheduleJob('* */1 * * * *', function(fireDate){
+	// var j = schedule.scheduleJob('* */1 * * * *', function(fireDate){
 
-	    genBanner(1200,600,globalText1,globalText2);
+	//     genBanner(1200,600,globalText1,globalText2);
 
-  	});
+ //  	});
 
 });
 
+if(options.key && options.cert && options.ca) {
+
+	https.createServer(options, app)
+	.listen(443, function() {
+
+		console.log("HTTPS Server started on: ", 443);
+
+		//scheduled job.
+		var j = schedule.scheduleJob('* */1 * * * *', function(fireDate){
+		    genBanner(1200,600,globalText1,globalText2);
+	  	});
+
+	});
+
+}
